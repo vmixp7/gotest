@@ -1,12 +1,13 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"gotest/controllers"
-	"gotest/middleware"
-	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/files"
 	_ "gotest/docs"
+	"gotest/middleware"
+
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRouter() *gin.Engine {
@@ -31,9 +32,7 @@ func SetupRouter() *gin.Engine {
 	r.GET("/users/name", controllers.GetUserByUsername)
 	r.GET("/users/:id", controllers.GetUserByID)
 
-
-
-
+	r.GET("/test/", controllers.GetTest)
 
 	return r
 }

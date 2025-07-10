@@ -7,11 +7,14 @@
 package controllers
 
 import (
+	"errors"
 	"gotest/core"
 	"gotest/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // @Summary Create User
@@ -162,4 +165,56 @@ func GetUserByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+func Transfer(c *gin.Context) {
+	var req struct {
+		FromID uint `json:"from_id"`
+		ToID   uint `json:"to_id"`
+		Amount int  `json:"amount"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	if req.Amount <= 0 || req.FromID == req.ToID {
+		c.JSON(400, gin.H{"error": "Invalid transfer"})
+		return
+	}
+
+	err := core.DB.Transaction(func(tx *gorm.DB) error {
+		var from, to models.User
+
+		// 鎖住這行資料SELECT * FROM users WHERE id = ? FOR UPDATE;
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&from, req.FromID).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&to, req.ToID).Error; err != nil {
+			return err
+		}
+
+		if from.Balance < req.Amount {
+			return errors.New("insufficient funds")
+		}
+
+		from.Balance -= req.Amount
+		to.Balance += req.Amount
+
+		if err := tx.Save(&from).Error; err != nil {
+			return err
+		}
+		if err := tx.Save(&to).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(200, gin.H{"message": "transfer successful"})
+	}
 }

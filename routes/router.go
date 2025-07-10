@@ -31,6 +31,7 @@ func SetupRouter() *gin.Engine {
 	r.GET("/users/email", controllers.GetUserByEmail)
 	r.GET("/users/name", controllers.GetUserByUsername)
 	r.GET("/users/:id", controllers.GetUserByID)
+	r.GET("/users/transfer", controllers.Transfer)
 
 	r.GET("/test/", controllers.GetTest)
 

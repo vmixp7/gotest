@@ -95,6 +95,32 @@ func CodelandUsernameValidation(str string) string {
 	return "true"
 }
 
+// 在排序陣列中尋找和為目標值的兩個數 (相向指針)
+func twoSum(numbers []int, target int) []int {
+	// 初始化左右指針
+	left := 0
+	right := len(numbers) - 1
+
+	// 當 left 指針小於 right 指針時，繼續搜尋
+	for left < right {
+		currentSum := numbers[left] + numbers[right]
+
+		// 如果當前和等於目標值，返回索引（題目要求從 1 開始）
+		if currentSum == target {
+			return []int{left + 1, right + 1}
+		} else if currentSum < target {
+			// 如果和太小，左指針向右移動
+			left++
+		} else {
+			// 如果和太大，右指針向左移動
+			right--
+		}
+	}
+
+	// 如果沒有找到（根據題目假設，這不應該發生，但作為函數的完整性，通常會這麼處理）
+	return []int{}
+}
+
 func GetTest(c *gin.Context) {
 	// ch := make(chan int)
 
@@ -115,7 +141,10 @@ func GetTest(c *gin.Context) {
 	// }
 	// fmt.Println("The sum is:", sum)
 
-	data := ArrayAdditionI([]int{4, 6, 23, 10, 1, 3})
+	numbers1 := []int{2, 7, 11, 15}
+	target1 := 9
+
+	data := twoSum(numbers1, target1)
 
 	c.JSON(http.StatusOK, data)
 }

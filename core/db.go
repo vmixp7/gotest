@@ -2,9 +2,11 @@ package core
 
 import (
 	"fmt"
+	"gotest/models"
+	"log"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"log"
 )
 
 var DB *gorm.DB
@@ -16,5 +18,7 @@ func InitDB() {
 	if err != nil {
 		log.Fatal("DB connection failed:", err)
 	}
+	// 自動建立資料表
+	DB.AutoMigrate(&models.User{})
 	fmt.Println("Database connected.")
 }

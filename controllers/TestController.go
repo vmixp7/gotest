@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -96,6 +98,8 @@ func CodelandUsernameValidation(str string) string {
 }
 
 // 在排序陣列中尋找和為目標值的兩個數 (相向指針)
+// numbers1 := []int{2, 7, 11, 15}
+// target1 := 9
 func twoSum(numbers []int, target int) []int {
 	// 初始化左右指針
 	left := 0
@@ -121,30 +125,61 @@ func twoSum(numbers []int, target int) []int {
 	return []int{}
 }
 
+// 啟動一個Goroutine，將數字從1到10傳遞到通道中
+func countSum() int {
+	ch := make(chan int)
+
+	go func() {
+		for i := 1; i <= 10; i++ {
+			ch <- i
+		}
+		close(ch)
+	}()
+
+	// 在主Goroutine中讀取通道中的數字，並將它們加總
+
+	sum := 0
+	for num := range ch {
+		sum += num
+	}
+	fmt.Println("The sum is:", sum)
+	return sum
+}
+
+type GameServer struct {
+	actions chan string
+	wg      *sync.WaitGroup
+}
+
+func NewGameServer(wg *sync.WaitGroup) *GameServer {
+	return &GameServer{
+		actions: make(chan string, 100), // 使用緩衝通道
+		wg:      wg,
+	}
+}
+
+func (s *GameServer) HandleActions() {
+	defer s.wg.Done() // 確保在處理完成後減少WaitGroup計數
+	for action := range s.actions {
+		fmt.Println("Handling action:", action)
+		// 在這裡處理遊戲邏輯
+		time.Sleep(100 * time.Millisecond) // 模擬處理時間
+	}
+}
+
 func GetTest(c *gin.Context) {
-	// ch := make(chan int)
 
-	// // 啟動一個Goroutine，將數字從1到10傳遞到通道中
+	var wg sync.WaitGroup
+	wg.Add(1) // 增加WaitGroup計數
+	server := NewGameServer(&wg)
+	go server.HandleActions()
 
-	// go func() {
-	// 	for i := 1; i <= 10; i++ {
-	// 		ch <- i
-	// 	}
-	// 	close(ch)
-	// }()
+	server.actions <- "Player1 joined the game"
+	server.actions <- "Player2 joined the game"
+	server.actions <- "Player3 moved to position (10, 20)"
+	close(server.actions) // 關閉通道以結束處理
 
-	// // 在主Goroutine中讀取通道中的數字，並將它們加總
+	wg.Wait() // 等待所有處理完成
 
-	// sum := 0
-	// for num := range ch {
-	// 	sum += num
-	// }
-	// fmt.Println("The sum is:", sum)
-
-	numbers1 := []int{2, 7, 11, 15}
-	target1 := 9
-
-	data := twoSum(numbers1, target1)
-
-	c.JSON(http.StatusOK, data)
+	c.JSON(http.StatusOK, "winners")
 }

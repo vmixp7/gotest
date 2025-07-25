@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"math/rand"
+	"time"
 )
 
 // @title My Gin API
@@ -21,36 +21,30 @@ import (
 // 	r.Run(":3000")
 // }
 
-// https://pkg.go.dev/github.com/gin-contrib/sessions?tab=overview#cookie-based
-// cookie-based
+// 程式碼修改自 Concurrency Patterns in Go: sync.WaitGroup @ https://www.calhoun.io/
+
 func main() {
-	r := gin.Default()
-	// 建立 store
-	store := cookie.NewStore([]byte("secret"))
+	notify("Service-1", "Service-2", "Service-3")
+}
 
-	// session 的名稱會在 browser 變成 cookie 的 key
-	r.Use(sessions.Sessions("mysession", store))
+func notifying(res chan string, s string) {
+	fmt.Printf("Starting to notifying %s...\n", s)
+	time.Sleep(time.Duration(rand.Intn(3)) * time.Second)
+	res <- fmt.Sprintf("Finish notifying %s", s)
+}
 
-	r.GET("/incr", func(c *gin.Context) {
-		// 從 ctx 中取出 session
-		session := sessions.Default(c)
-		var count int
+func notify(services ...string) {
+	res := make(chan string)
+	var count int = 0
 
-		// 取得 session 中的值
-		v := session.Get("count")
-		if v == nil {
-			count = 0
-		} else {
-			count = v.(int)
-			count++
-		}
+	for _, service := range services {
+		count++
+		go notifying(res, service)
+	}
 
-		// 設定 session 中的值（不會儲存）
-		session.Set("count", count)
+	for i := 0; i < count; i++ {
+		fmt.Println(<-res)
+	}
 
-		// 儲存 session 中的值
-		session.Save()
-		c.JSON(200, gin.H{"count": count})
-	})
-	r.Run(":8000")
+	fmt.Println("All service notified!")
 }

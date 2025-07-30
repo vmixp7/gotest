@@ -1,10 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"math/rand"
-	"time"
-)
+import "fmt"
 
 // @title My Gin API
 // @version 1.0
@@ -14,37 +10,33 @@ import (
 // @in header
 // @name Authorization
 
-// func main() {
-// 	core.InitDB()
-// 	core.DB.AutoMigrate(&models.User{})
-// 	r := routes.SetupRouter()
-// 	r.Run(":3000")
-// }
+//	func main() {
+//		core.InitDB()
+//		core.DB.AutoMigrate(&models.User{})
+//		r := routes.SetupRouter()
+//		r.Run(":3000")
+//	}
 
-// 程式碼修改自 Concurrency Patterns in Go: sync.WaitGroup @ https://www.calhoun.io/
+func squares(c chan int) {
+	// 把 0 ~ 9 寫入 channel 後便把 channel 關閉
+	for i := 0; i <= 8; i++ {
+		c <- i
+	}
+
+	close(c)
+}
 
 func main() {
-	notify("Service-1", "Service-2", "Service-3")
-}
+	fmt.Println("main() started")
+	c := make(chan int)
 
-func notifying(res chan string, s string) {
-	fmt.Printf("Starting to notifying %s...\n", s)
-	time.Sleep(time.Duration(rand.Intn(3)) * time.Second)
-	res <- fmt.Sprintf("Finish notifying %s", s)
-}
+	// 發動 squares goroutine
+	go squares(c)
 
-func notify(services ...string) {
-	res := make(chan string)
-	var count int = 0
-
-	for _, service := range services {
-		count++
-		go notifying(res, service)
+	// 監聽 channel 的值：週期性的 block/unblock main goroutine 直到 squares goroutine close
+	for val := range c {
+		fmt.Println(val)
 	}
 
-	for i := 0; i < count; i++ {
-		fmt.Println(<-res)
-	}
-
-	fmt.Println("All service notified!")
+	fmt.Println("main() close")
 }

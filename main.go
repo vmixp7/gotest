@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"gotest/services"
+)
 
 // @title My Gin API
 // @version 1.0
@@ -17,26 +19,6 @@ import "fmt"
 //		r.Run(":3000")
 //	}
 
-func squares(c chan int) {
-	// 把 0 ~ 9 寫入 channel 後便把 channel 關閉
-	for i := 0; i <= 8; i++ {
-		c <- i
-	}
-
-	close(c)
-}
-
 func main() {
-	fmt.Println("main() started")
-	c := make(chan int)
-
-	// 發動 squares goroutine
-	go squares(c)
-
-	// 監聽 channel 的值：週期性的 block/unblock main goroutine 直到 squares goroutine close
-	for val := range c {
-		fmt.Println(val)
-	}
-
-	fmt.Println("main() close")
+	services.ChannelTest4()
 }

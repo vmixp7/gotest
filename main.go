@@ -20,5 +20,7 @@ import (
 //	}
 
 func main() {
-	services.ChannelTest4()
+
+	services.DeferTest1()
+
 }

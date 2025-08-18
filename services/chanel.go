@@ -15,7 +15,7 @@ func squares(c chan int) {
 
 func ChannelTest1() {
 	c := make(chan int)
-
+	fmt.Println("main() started")
 	// 發動 squares goroutine
 	go squares(c)
 
@@ -23,6 +23,7 @@ func ChannelTest1() {
 	for val := range c {
 		fmt.Println(val)
 	}
+	fmt.Println("main() ended")
 }
 
 // 隨機選取
@@ -86,7 +87,24 @@ func ChannelTest5() {
 			return // 如果沒有 return 的話程式將不會結束，一直卡在 for loop 中
 		default:
 			fmt.Println("    .")
+			// 加個 sleep，讓 CPU 歇一下
 			time.Sleep(50 * time.Millisecond)
 		}
 	}
+}
+
+// 帶緩衝的通道
+func ChannelTest6() {
+	// 这里我们定义了一个可以存储整数类型的带缓冲通道
+	// 缓冲区大小为2
+	ch := make(chan int, 2)
+
+	// 因为 ch 是带缓冲的通道，我们可以同时发送两个数据
+	// 而不用立刻需要去同步读取数据
+	ch <- 1
+	ch <- 2
+
+	// 获取这两个数据
+	fmt.Println(<-ch)
+	fmt.Println(<-ch)
 }

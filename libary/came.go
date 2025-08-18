@@ -1,7 +1,6 @@
 package libary
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -27,19 +26,33 @@ func RandomDraw(participants []string) string {
 //		{"Charlie", 6},
 //	}
 func WeightedDraw(participants []Participant) string {
+	// rand.Seed(time.Now().UnixNano())
+	// totalWeight := 0
+	// for _, p := range participants {
+	// 	totalWeight += p.Weight
+	// }
+	// r := rand.Intn(totalWeight)
+	// for _, p := range participants {
+	// 	fmt.Println("r-------------------------", r)
+	// 	if r < p.Weight {
+	// 		return p.Name
+	// 	}
+	// 	r -= p.Weight
+	// 	fmt.Println("Weight------", p.Weight)
+	// }
+	// return ""
+
 	rand.Seed(time.Now().UnixNano())
-	totalWeight := 0
+	weight := 0
 	for _, p := range participants {
-		totalWeight += p.Weight
+		weight += p.Weight
 	}
-	r := rand.Intn(totalWeight)
+	index := rand.Intn(weight)
 	for _, p := range participants {
-		fmt.Println("r-------------------------", r)
-		if r < p.Weight {
+		if index < p.Weight {
 			return p.Name
 		}
-		r -= p.Weight
-		fmt.Println("Weight------", p.Weight)
+		index -= p.Weight
 	}
 	return ""
 }

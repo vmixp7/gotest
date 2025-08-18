@@ -31,9 +31,14 @@ func MathMove() {
 	c = a ^ b /* 49 = 0011 0001 */
 	fmt.Printf("第三行 - c 的值为 %d\n", c)
 
-	c = a << 3 /* 240 = 1111 0000 左移2位就是a乘以2的3次方 */
+	c = a << 3 /* 240 = 1111 0000 左移3位就是a乘以2的3次方 */
 	fmt.Printf("第四行 - c 的值为 %d\n", c)
 
-	c = a >> 3 /* 15 = 0000 1111 右移2位就是a除以2的3次方 */
+	c = a >> 3 /* 15 = 0000 1111 右移3位就是a除以2的3次方 */
 	fmt.Printf("第五行 - c 的值为 %d\n", c)
+}
+
+// 計算兩個座標的距離
+func Distance(x1, y1, x2, y2 float64) float64 {
+	return math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2))
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"math"
 )
 
 /* 交换函数这样写更加简洁，也是 go 语言的特性，可以用下，c++ 和 c# 是不能这么干的 */
@@ -69,4 +70,23 @@ func PointerTest3() {
 	jim.updateNameForPoint("Aaron") // 使用指针接收者更新 firstName
 
 	fmt.Printf("After person is: %+v\n", jim)
+}
+
+type Vertex struct {
+	X, Y float64
+}
+
+func Abs(v Vertex) float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+func Scale(v *Vertex, f float64) {
+	v.X = v.X * f
+	v.Y = v.Y * f
+}
+
+func PointerTest4() {
+	v := Vertex{3, 4}
+	Scale(&v, 10)
+	fmt.Println(Abs(v))
 }

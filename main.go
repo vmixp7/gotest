@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"gotest/libary"
+)
 
 // @title My Gin API
 // @version 1.0
@@ -28,14 +31,19 @@ func squares(c chan int) {
 
 func main() {
 	fmt.Println("main() started")
-	c := make(chan int)
+	// c := make(chan int)
 
-	// 發動 squares goroutine
-	go squares(c)
+	// // 發動 squares goroutine
+	// go squares(c)
 
-	// 監聽 channel 的值：週期性的 block/unblock main goroutine 直到 squares goroutine close
-	for val := range c {
-		fmt.Println(val)
+	// // 監聽 channel 的值：週期性的 block/unblock main goroutine 直到 squares goroutine close
+	// for val := range c {
+	// 	fmt.Println(val)
+	// }
+
+	makeCounter := libary.MakeCounter()
+	for i := 0; i < 10; i++ {
+		fmt.Println(makeCounter())
 	}
 
 	fmt.Println("main() close")

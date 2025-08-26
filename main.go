@@ -21,6 +21,6 @@ import (
 
 func main() {
 
-	libary.Winners()
+	libary.RemoveIndex()
 
 }

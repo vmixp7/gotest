@@ -8,6 +8,47 @@ import (
 	"time"
 )
 
+// 移除index得值
+func RemoveIndex() []int {
+	s := []int{10, 20, 30, 40, 50}
+	index := 2
+	return append(s[:index], s[index+1:]...)
+}
+
+// 反轉一個字串
+func FirstReverse() string {
+	str := "hello world!"
+	runes := []rune(str) // 將字串轉換為rune切片以處理Unicode字符
+	fmt.Println("Original string:", runes)
+	// 雙指針法
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
+}
+
+// 判斷括號是否正確配對
+func BracketMatcher() int {
+	str := "(coder)(byte))"
+	stack := []rune{}
+	for _, ch := range str {
+		if ch == '(' {
+			stack = append(stack, ch)
+		} else if ch == ')' {
+			if len(stack) == 0 {
+				return 0
+			}
+			// 彈出堆疊頂部元素
+			stack = stack[:len(stack)-1]
+		}
+		fmt.Println("Current stack:", stack)
+	}
+	if len(stack) == 0 {
+		return 1
+	}
+	return 0
+}
+
 type Interval struct {
 	Start, End int
 }
@@ -43,8 +84,6 @@ func getFreeTimes(courses []Interval) []Interval {
 func intersect(a, b []Interval) []Interval {
 	res := []Interval{}
 	i, j := 0, 0
-	fmt.Println("a-----", a)
-	fmt.Println("b-----", b)
 	// 使用雙指標法
 	for i < len(a) && j < len(b) {
 		start := max(a[i].Start, b[j].Start)
@@ -145,39 +184,6 @@ func Exam2() {
 	fmt.Println("交集區間:", intersections)
 }
 
-// 反轉一個字串
-func FirstReverse() string {
-	str := "hello world!"
-	runes := []rune(str) // 將字串轉換為rune切片以處理Unicode字符
-	fmt.Println("Original string:", runes)
-	// 雙指針法
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		runes[i], runes[j] = runes[j], runes[i]
-	}
-	return string(runes)
-}
-
-// 判斷括號是否正確配對
-func BracketMatcher() int {
-	str := "(coder)(byte))"
-	stack := []rune{}
-	for _, ch := range str {
-		if ch == '(' {
-			stack = append(stack, ch)
-		} else if ch == ')' {
-			if len(stack) == 0 {
-				return 0
-			}
-			stack = stack[:len(stack)-1]
-		}
-		fmt.Println("Current stack:", stack)
-	}
-	if len(stack) == 0 {
-		return 1
-	}
-	return 0
-}
-
 // 給一個數列，檢查是否存在任意子集合加總等於最大值
 func ArrayAdditionI() bool {
 	arr := []int{4, 6, 23, 10, 1, 3}
@@ -252,6 +258,7 @@ func TwoSum() []int {
 
 		// 如果當前和等於目標值，返回索引（題目要求從 1 開始）
 		if currentSum == target {
+			fmt.Println("找到目標值，索引為:", []int{left + 1, right + 1})
 			return []int{left + 1, right + 1}
 		} else if currentSum < target {
 			// 如果和太小，左指針向右移動
@@ -264,27 +271,6 @@ func TwoSum() []int {
 
 	// 如果沒有找到（根據題目假設，這不應該發生，但作為函數的完整性，通常會這麼處理）
 	return []int{}
-}
-
-// 啟動一個Goroutine，將數字從1到10傳遞到通道中
-func CountSum() int {
-	ch := make(chan int)
-
-	go func() {
-		for i := 1; i <= 10; i++ {
-			ch <- i
-		}
-		close(ch)
-	}()
-
-	// 在主Goroutine中讀取通道中的數字，並將它們加總
-
-	sum := 0
-	for num := range ch {
-		sum += num
-	}
-	fmt.Println("The sum is:", sum)
-	return sum
 }
 
 type GameServer struct {

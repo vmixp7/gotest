@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gotest/libary"
+	"gotest/services"
 )
 
 // @title My Gin API
@@ -21,6 +21,6 @@ import (
 
 func main() {
 
-	libary.Winners()
+	services.Mutex4()
 
 }

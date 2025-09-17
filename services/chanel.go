@@ -93,7 +93,7 @@ func ChannelTest5() {
 	}
 }
 
-// 帶緩衝的通道
+// buffered channel 帶緩衝的通道
 func ChannelTest6() {
 	// 这里我们定义了一个可以存储整数类型的带缓冲通道
 	// 缓冲区大小为2

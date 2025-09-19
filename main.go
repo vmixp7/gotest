@@ -21,6 +21,5 @@ import (
 
 func main() {
 
-	services.Mutex4()
-
+	services.CountSum()
 }

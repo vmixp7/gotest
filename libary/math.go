@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-// 來計算圓的面積
+// 來計算圓的面積, 半徑*半徑*3.14
 func MathArea(radius float64) float64 {
 
 	// 使用 math.Pi 來計算圓的面積：A = π * r^2

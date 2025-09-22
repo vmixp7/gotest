@@ -21,5 +21,5 @@ import (
 
 func main() {
 
-	services.CountSum()
+	services.WorkerPull()
 }

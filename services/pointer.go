@@ -43,7 +43,7 @@ type person2 struct {
 }
 
 // 建立 person 的 function receiver
-func (p person2) updateName(newFirstName string) {
+func (p person2) updateName1(newFirstName string) {
 	// 沒使用指針,不會更新 firstName
 	p.firstName = newFirstName
 }
@@ -66,7 +66,7 @@ func PointerTest3() {
 
 	fmt.Printf("Before person is: %+v\n", jim)
 
-	// jim.updateName("Aaron") // 沒有使用指针接收者，firstName 不會被更新
+	// jim.updateName1("Aaron") // 沒有使用指针接收者，firstName 不會被更新
 	jim.updateNameForPoint("Aaron") // 使用指针接收者更新 firstName
 
 	fmt.Printf("After person is: %+v\n", jim)

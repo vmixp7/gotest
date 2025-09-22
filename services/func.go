@@ -72,7 +72,7 @@ func Generic() {
 }
 
 // 是外部函數，它會返回一個閉包
-func MakeCounter() func() int {
+func counter() func() int {
 	// `count` 是外部函數的局部變數
 	count := 0
 
@@ -82,4 +82,37 @@ func MakeCounter() func() int {
 		count++ // 每次呼叫這個內層函數，`count` 的值都會增加
 		return count
 	}
+}
+
+func MakeCounter() {
+	c := counter()
+	fmt.Println(c()) // 1
+	fmt.Println(c()) // 2
+	fmt.Println(c()) // 3
+}
+
+// CounterFunc 定義計數器返回的函式型別
+type CounterFunc func(delta int, reset bool) int
+
+// counter 返回一個閉包，可以累計、加 N 或重置
+func counter2() CounterFunc {
+	count := 0
+	return func(delta int, reset bool) int {
+		if reset {
+			count = 0
+		} else {
+			count += delta
+		}
+		return count
+	}
+}
+
+func MakeCounter2() {
+	c := counter2()
+
+	fmt.Println(c(1, false)) // +1 → 1
+	fmt.Println(c(1, false)) // +1 → 2
+	fmt.Println(c(5, false)) // +5 → 7
+	fmt.Println(c(0, true))  // 重置 → 0
+	fmt.Println(c(2, false)) // +2 → 2
 }

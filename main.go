@@ -1,8 +1,6 @@
 package main
 
-import (
-	"gotest/services"
-)
+import "gotest/services"
 
 // @title My Gin API
 // @version 1.0
@@ -18,8 +16,10 @@ import (
 //		r := routes.SetupRouter()
 //		r.Run(":3000")
 //	}
+//
 
 func main() {
 
-	services.WorkerPull()
+	services.Slice3()
+
 }

@@ -21,3 +21,38 @@ func Slice1() {
 	arr_append(arr)
 	fmt.Println(arr)
 }
+
+func Slice2() {
+	originalSlice := []int{1, 2, 3, 4, 5}
+	// 'newSlice' 的 header(長度、容量、指標)被複製，但底層陣列與 'originalSlice' 相同
+	newSlice := originalSlice
+
+	fmt.Printf("Original Slice: %v\n", originalSlice)
+	fmt.Printf("New Slice:      %v\n", newSlice)
+
+	// 透過 'newSlice' 修改元素
+	newSlice[0] = 99
+
+	fmt.Println("\n--- After modification ---")
+	// 'originalSlice' 也被改變了，因為它們共用底層陣列
+	fmt.Printf("Original Slice: %v\n", originalSlice)
+	fmt.Printf("New Slice:      %v\n", newSlice)
+}
+
+func Slice3() {
+	originalSlice := []int{1, 2, 3, 4, 5}
+	// 建立一個新的 slice，並複製其底層資料
+	newSlice := make([]int, len(originalSlice))
+	copy(newSlice, originalSlice)
+
+	fmt.Printf("Original Slice: %v\n", originalSlice)
+	fmt.Printf("New Slice:      %v\n", newSlice)
+
+	// 透過 'newSlice' 修改元素
+	newSlice[0] = 99
+
+	fmt.Println("\n--- After modification ---")
+	// 這次 'originalSlice' 不會受到影響
+	fmt.Printf("Original Slice: %v\n", originalSlice)
+	fmt.Printf("New Slice:      %v\n", newSlice)
+}
